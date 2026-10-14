@@ -5,7 +5,7 @@ Fuentes de decisión: `TECH-DESIGN.md`, `docs/adr/`. Unidad de trabajo vigente: 
 
 ## Propiedad de rutas
 
-> Estado: **pendiente de aprobación humana** junto con `SPRINT0.md` (2026-10-13).
+> Estado: **aprobado por el humano** (2026-10-14) junto con `SPRINT0.md`.
 > Rutas relativas a `floreria-ecommerce/`. Cada rol toca **solo** sus rutas y commitea solo esas,
 > con el prefijo `[TESTER]` o `[DEV]` en el mensaje.
 
@@ -18,3 +18,5 @@ Fuentes de decisión: `TECH-DESIGN.md`, `docs/adr/`. Unidad de trabajo vigente: 
 
 - `package.json` es del DEV: agrega las dependencias y scripts de prueba exactamente como los fija la unidad de trabajo vigente. El TESTER no lo edita.
 - Una ruta que no aparece en esta tabla no se toca sin consultar al LEAD.
+- El TESTER es dueño de `vitest.config.ts` y `playwright.config.ts`; el DEV agrega las devDependencies de prueba en `package.json` (confirmado por el humano, 2026-10-14).
+- Este `AGENTS.md` es la fuente de reglas del proyecto; el `CLAUDE.md` de `PROYECTO_01/` (padre) **no se modifica** (humano, 2026-10-14).
