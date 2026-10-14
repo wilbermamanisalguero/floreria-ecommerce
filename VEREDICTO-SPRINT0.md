@@ -8,7 +8,11 @@
 
 > Reemplaza el registro previo del 2026-10-13 (emitido sin entregas). Ese texto queda en el historial de git.
 
-## Veredicto global: 🟡 SIN ROJOS — PENDIENTE DE DECISIÓN HUMANA
+## Veredicto global: 🟢 APTO PARA PR — `NO VERIFICADO` aceptados por el humano (2026-10-14)
+
+> **Actualización 2026-10-14:** el humano resolvió los puntos de la §4 (ver §5). La revisión humana del criterio 10 queda pendiente **en el PR**. El PR sigue bloqueado hasta que haya remoto y `gh`.
+
+### Estado anterior a las decisiones: 🟡 SIN ROJOS — PENDIENTE DE DECISIÓN HUMANA
 
 - **0 🔴**: no hay devoluciones a TESTER ni a DEV (vuelta 0).
 - **8 de 10 criterios en 🟢** con evidencia propia del LEAD.
@@ -90,3 +94,15 @@ Ninguna (0 🔴). Vuelta 0.
 ### PR
 
 7. **No se puede abrir** con `gh pr create`: no hay `gh` ni remoto (§7.1). Cuando estén, el LEAD abre el PR desde `sprint0` con este veredicto. Nadie hizo push ni merge.
+
+## 5. Decisiones del humano (2026-10-14)
+
+| # | Punto | Decisión | Efecto |
+|---|---|---|---|
+| 1 | NO VERIFICADO del criterio 1 (Node 22) y del criterio 3 (salud 200 con BD) | **Aceptados** para abrir el PR; se verifican después | No bloquean el PR. Siguen pendientes de verificación |
+| 2 | Revisión humana del criterio 10 | Pendiente: **se hace en el PR** | Queda abierta |
+| 3 | Lectura de "cuerpo exacto" | **Texto literal** | Las pruebas del TESTER (`toBe` literal) quedan como están |
+| 4 | Decisiones técnicas del DEV | **Aceptados** postgres.js, Next 16, Vitest 4, TS 5.9 y ESLint 9 | Sin cambios |
+| 5 | H1: `AGENTS.md` modificado por `next dev` | **Commitear** el bloque | Commit [LEAD] |
+| 6 | H2: `informes/` fuera del mapa | `informes/**` pasa a ser **ruta del LEAD donde cada rol deja su informe**; se commitea `informes/DEV-sprint0.md` | `AGENTS.md` y `SPRINT0.md` §4 actualizados; commit [LEAD] |
+| 7 | PR | Sigue **bloqueado** hasta que haya remoto de GitHub y `gh` | El LEAD lo abre desde `sprint0` cuando estén |
