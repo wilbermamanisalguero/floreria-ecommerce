@@ -1,73 +1,92 @@
 # VEREDICTO — Sprint 0 (`floreria-ecommerce/`)
 
-**Fecha:** 2026-10-13 22:36 · **Emitido por:** LEAD (skill `veredicto` v1), por encargo explícito del humano
-**Spec juzgada:** `SPRINT0.md` (estado: *Pendiente de aprobación*, `SPRINT0.md:3`)
+**Fecha:** 2026-10-14 · **Emitido por:** LEAD (skill `veredicto` v1)
+**Spec juzgada:** `SPRINT0.md` (Aprobado 2026-10-14, humano; incl. §8 autorización `npx pnpm@9`)
 **Mapa de rutas:** `AGENTS.md` → `## Propiedad de rutas`
+**Rama:** `sprint0` · **Base:** `2389cf2` (`git merge-base main HEAD`) · **HEAD juzgado:** `d10fad9`
+**Entregas:** `ENTREGA DEV` (`b463925`, informe `informes/DEV-sprint0.md`) · `ENTREGA TESTER` (`6cc2a85`, `d10fad9`, informe `tests/INFORME-TESTER-sprint0.md`)
 
-## Veredicto global: ⛔ NO APROBADO — PENDIENTE
+> Reemplaza el registro previo del 2026-10-13 (emitido sin entregas). Ese texto queda en el historial de git.
 
-**No hay nada que juzgar todavía.** El ciclo de construcción no ha empezado:
-- `SPRINT0.md` **no está aprobado** por el humano, y sus 8 preguntas abiertas (§7) siguen sin respuesta. Por eso el LEAD no invocó al TESTER ni al DEV.
-- **No existe `ENTREGA TESTER` ni `ENTREGA DEV`.** La skill `veredicto` indica que sin las dos entregas no se dicta veredicto, sino que se espera. Este documento se emite igual **por pedido explícito del humano**, como registro del estado real: no reemplaza el veredicto que se dictará cuando lleguen las entregas.
-- No hay ningún 🟢 ni ningún 🔴: **los 10 puntos de la DoD están `NO VERIFICADO`**. Al no haber 🔴, no corresponde ninguna *devolución* a TESTER ni a DEV (vuelta 0). Lo que existe son **bloqueos**, y casi todos los resuelve el humano.
+## Veredicto global: 🟡 SIN ROJOS — PENDIENTE DE DECISIÓN HUMANA
 
-> **Nota de ubicación:** la skill sugiere `informes/VEREDICTO-<unidad>.md`. Por indicación del humano se guarda en la raíz (`VEREDICTO-SPRINT0.md`), lo que coincide con `AGENTS.md` (`VEREDICTO-*.md`, solo LEAD/humano).
+- **0 🔴**: no hay devoluciones a TESTER ni a DEV (vuelta 0).
+- **8 de 10 criterios en 🟢** con evidencia propia del LEAD.
+- **2 criterios `NO VERIFICADO`**, o con una parte sin verificar (1 y 3). Aceptarlos o no **lo decide el humano**; el LEAD no los da por aceptados.
+- El **PR no se puede abrir** todavía: no hay `gh` ni remoto de GitHub (§7.1).
 
-## Evidencia del estado real (comandos ejecutados el 2026-10-13 22:36 en `floreria-ecommerce/`)
+## Entorno de verificación (ejecutado por el LEAD, 2026-10-14)
 
-| Comprobación | Comando | Salida |
-|---|---|---|
-| Contenido de la raíz | `ls -A` | `.agents/ .claude/ AGENTS.md PRD*.md SPRINT0.md TECH-DESIGN.md docs/ skills-lock.json` (sin código) |
-| Repositorio git | `git rev-parse --is-inside-work-tree` | `fatal: not a git repository (or any of the parent directories): .git` |
-| Código y pruebas | `ls -d src tests e2e drizzle package.json` | `No such file or directory` para los cinco |
-| Base de datos | `echo ${DATABASE_URL}` / `ls .env*` | variable no definida; no hay archivos `.env*` |
-| Runtime local | `node -v` / `pnpm -v` | `v20.19.5` (la DoD exige 22.x) / `pnpm: command not found` |
-| Entregas | (bandeja del LEAD en herdr) | no se recibió `ENTREGA TESTER` ni `ENTREGA DEV` |
+Node `v20.19.5` · pnpm vía `npx -y pnpm@9` (9.15.9) · `DATABASE_URL` **no definida** (sin `.env`/`.env.local`) · Chromium de Playwright ya descargado.
 
-## 1. Propiedad de rutas por rol
+| Comando (LEAD) | Resultado |
+|---|---|
+| `pnpm install --frozen-lockfile` | exit 0 |
+| `pnpm typecheck` | exit 0 |
+| `pnpm lint` | exit 0 |
+| `pnpm build` | exit 0. Rutas: `○ /`, `○ /_not-found`, `ƒ /api/health` |
+| `pnpm db:generate` | exit 0. `0 tables` · `No schema changes, nothing to migrate` |
+| `pnpm test` | exit 0. `Test Files 3 passed (3)` · `Tests 36 passed \| 1 skipped (37)` |
+| `pnpm test:e2e` | exit 0. `2 passed`, `1 skipped` (criterio 3) |
+| `pnpm dev` + `curl` | `GET /` → `200` en `:3000`; `GET /api/health` → `HTTP/1.1 503` · `{"status":"error","db":"error"}` |
 
-| Rol | Resultado | Motivo | Qué haría falta |
+## 1. Propiedad de rutas
+
+Salida de `git log 2389cf2..HEAD --name-only`, comparada con `AGENTS.md`:
+
+| Commit | Rol | Archivos | Resultado |
 |---|---|---|---|
-| TESTER | **NO VERIFICADO** | No hay repo git, así que no hay `git merge-base` ni `git log <base>..HEAD`. Tampoco hay commits `[TESTER]` ni archivos en `tests/**` o `e2e/**`. | Repo git inicializado (pregunta 4) y entrega del TESTER con commits `[TESTER]`. |
-| DEV | **NO VERIFICADO** | Mismo motivo: no hay repo, ni commits `[DEV]`, ni archivos en `src/**`. | Repo git (pregunta 4) y entrega del DEV con commits `[DEV]`. |
-| Commits sin prefijo | **NO VERIFICADO** | No hay commits. | Ídem. |
+| `6cc2a85` | [TESTER] | `e2e/*.spec.ts`, `playwright.config.ts`, `vitest.config.ts`, `tests/fixtures/*`, `tests/integration/*`, `tests/unit/*` | 🟢 todo dentro de `tests/**`, `e2e/**` y los configs |
+| `d10fad9` | [TESTER] | `tests/INFORME-TESTER-sprint0.md` | 🟢 dentro de `tests/**` |
+| `b463925` | [DEV] | `.env.example`, `.gitignore`, `.nvmrc`, `components.json`, `drizzle.config.ts`, `drizzle/**`, `eslint.config.mjs`, `next.config.ts`, `package.json`, `pnpm-lock.yaml`, `postcss.config.mjs`, `public/.gitkeep`, `src/**`, `tsconfig.json` | 🟢 todo dentro de las rutas del DEV |
+| `909c0d5`, `6ce09e5` | [LEAD] | `AGENTS.md`, `SPRINT0.md` | 🟢 rutas del LEAD |
 
-Hallazgos de propiedad: **ninguno** (no hay archivos de TESTER ni de DEV que comparar).
+Todos los commits llevan prefijo. **Ningún rol tocó rutas ajenas en sus commits.**
+
+**Hallazgos fuera de commits (para decisión humana):**
+
+- **H1 — `AGENTS.md` con un cambio sin commitear que no hizo ningún rol.** Es el bloque `<!-- BEGIN:nextjs-agent-rules -->…<!-- END -->`, que `next dev` agrega solo (lo dice el propio bloque). Se generó al levantar el servidor de desarrollo. `AGENTS.md` es del LEAD/humano. El LEAD **no** lo commiteó ni lo descartó. Decide el humano: commitearlo (si no, reaparece cada vez que corre `next dev`) o descartarlo.
+- **H2 — `informes/DEV-sprint0.md` sin commitear.** `informes/` no está en el mapa de `AGENTS.md`. El TESTER, en cambio, guardó su informe en `tests/`, que sí es ruta suya. Decide el humano: agregar `informes/**` al mapa (y de quién es) o mover el informe.
 
 ## 2. Definition of Done (`SPRINT0.md` §5)
 
-Pruebas del TESTER: **no se corrieron**, porque no existen ni hay informe del TESTER con el comando.
-
-| # | Criterio (resumen) | Resultado | Motivo concreto | Qué haría falta para verificarlo | Desbloquea |
-|---|---|---|---|---|---|
-| 1 | Instala y arranca en local con Node 22 + pnpm (`pnpm install`, `pnpm dev` en `:3000`, `engines`/`packageManager`) | **NO VERIFICADO** | No hay `package.json` ni código. Además, la máquina tiene Node `v20.19.5` y no tiene pnpm. | Node 22 y pnpm instalados en la máquina; aprobación de `SPRINT0.md`; entrega del DEV. | Humano (entorno + aprobación) → DEV |
-| 2 | `pnpm build` exit 0 | **NO VERIFICADO** | No hay proyecto que compilar; no hay pnpm. | Lo mismo que el punto 1. | Humano → DEV |
-| 3 | `GET /api/health` → `200 {"status":"ok","db":"ok"}` | **NO VERIFICADO** | No hay app, ni prueba del TESTER, ni `DATABASE_URL`. | `DATABASE_URL` de Neon o Postgres local (pregunta 3); entrega del DEV (route handler) y del TESTER (prueba). | Humano → DEV + TESTER |
-| 4 | `GET /api/health` → `503 {"status":"error","db":"error"}` con BD caída | **NO VERIFICADO** | No hay app ni prueba. | Entregas de DEV y TESTER (no requiere BD real; sí la app). | DEV + TESTER (tras aprobación) |
-| 5 | `/` responde `200`, sin contenido de negocio, sin violaciones axe `serious`/`critical` | **NO VERIFICADO** | No hay app ni prueba Playwright + axe. | Entregas de DEV (página) y TESTER (prueba axe). | DEV + TESTER (tras aprobación) |
-| 6 | `pnpm test` y `pnpm test:e2e` exit 0 | **NO VERIFICADO** | No hay scripts, runners ni pruebas; no hay pnpm. | DEV agrega scripts y dependencias; TESTER, configuración y pruebas; pnpm en la máquina. | Humano (entorno) → DEV + TESTER |
-| 7 | `pnpm db:generate` exit 0 sobre esquema vacío; `drizzle.config.ts` lee `DATABASE_URL` | **NO VERIFICADO** | No hay `drizzle.config.ts` ni scripts; no hay `DATABASE_URL`. Sigue abierto si el esquema queda vacío (pregunta 6). | Respuesta a las preguntas 3 y 6; entrega del DEV. | Humano → DEV |
-| 8 | `pnpm lint` y `pnpm typecheck` exit 0 | **NO VERIFICADO** | No hay código ni scripts. | Entrega del DEV; pnpm en la máquina. | Humano (entorno) → DEV |
-| 9 | Respeta los ADRs transversales (App Router en `src/app/`, Drizzle único ORM, Tailwind + shadcn, sin estado global, `.env.example` solo con `DATABASE_URL`) | **NO VERIFICADO** | No hay archivos que revisar. Además, ADR-07, 08, 10 y 12 **no existen como archivo** en `docs/adr/` (pregunta 1, bloqueante): la revisión hoy solo podría citar `TECH-DESIGN.md` §3. | Respuesta a la pregunta 1 (ARCH redacta ADR-07..15 o el humano acepta el Tech Design como fuente); entrega del DEV. | Humano (y ARCH si se pide) → DEV |
-| 10 | Cero lógica de negocio (sin tablas, solo `/` y `/api/health`, sin `stripe`/`next-auth`/`@vercel/blob`/Maps, sin Server Actions) | **NO VERIFICADO** | No hay código ni `package.json` que inspeccionar. Hoy no hay lógica de negocio porque no hay nada, lo que **no** cuenta como cumplimiento. | Entrega del DEV + revisión humana. | DEV → humano (revisión) |
+| # | Criterio | Resultado | Evidencia |
+|---|---|---|---|
+| 1 | Instala y arranca con Node 22 + pnpm | 🟡 **Parcial: lo de Node 22 queda NO VERIFICADO** | 🟢 `pnpm install` exit 0; `pnpm dev` sirve `:3000` (`/` → 200); `package.json` `engines.node: "22.x"`, `packageManager: "pnpm@9.15.9"`; `.nvmrc` = `22`. **NO VERIFICADO:** `node -v` → `v20.19.5`, no `v22.x` (§7.1, §8) |
+| 2 | `pnpm build` exit 0 | 🟢 | `pnpm build` exit 0 (con Node 20) |
+| 3 | Salud con BD → `200` `{"status":"ok","db":"ok"}` | **NO VERIFICADO** | No hay `DATABASE_URL`. Las pruebas `e2e/health.spec.ts:10` y `tests/integration/health-route.test.ts` existen y **se saltan**: un salto no es verde. Código: `src/app/api/health/route.ts:9-10` (`select 1` → `Response.json({ status: "ok", db: "ok" })`) |
+| 4 | Salud con BD caída → `503` `{"status":"error","db":"error"}` | 🟢 | `e2e/health.spec.ts:19` ok; prueba de integración ok; `curl` del LEAD → `503` con el cuerpo exacto; `route.ts:11-12` |
+| 5 | `/` → 200, placeholder, sin axe `serious`/`critical` | 🟢 | `e2e/home.spec.ts:4` ok; `src/app/page.tsx` solo tiene "Florería" / "Sitio en construcción." |
+| 6 | Los runners se ejecutan | 🟢 | `pnpm test` exit 0 (36 pruebas Vitest reales) y `pnpm test:e2e` exit 0 |
+| 7 | Migraciones sobre esquema vacío | 🟢 | `pnpm db:generate` exit 0 (`0 tables`); `drizzle.config.ts:17` lee `process.env.DATABASE_URL`. (`db:migrate` no forma parte del criterio y no se ejecutó: requiere BD) |
+| 8 | `lint` y `typecheck` | 🟢 | Ambos exit 0 |
+| 9 | ADRs transversales | 🟢 | Existe `src/app/` y no existe `pages/`; `src/app/api/health/route.ts`; único ORM: `drizzle-orm` (deps); `components.json` presente y `tailwindcss` en devDeps; no hay librería de estado global en deps; `.env.example` solo trae `DATABASE_URL`; pruebas `tests/unit/estructura-adr.test.ts` ok |
+| 10 | Cero lógica de negocio | 🟢 en lo comprobable · **falta la revisión humana** que exige la spec | `src/db/schema.ts` = `export {};` (sin tablas); `build` solo genera `/` y `/api/health`; `grep "use server" src` sin resultados; deps sin `stripe`, `@stripe/*`, `next-auth`, `@auth/*`, `@vercel/blob`, `@googlemaps/*`, `@vis.gl/*`; `tests/unit/package-contract.test.ts` ok |
 
 ## 3. Devoluciones
 
-| A quién | Punto | Vuelta |
-|---|---|---|
-| — | Ninguna: no hay 🔴, solo `NO VERIFICADO` por falta de entregas. | 0 |
+Ninguna (0 🔴). Vuelta 0.
 
-## 4. Bloqueos y decisiones pendientes del humano (`SPRINT0.md` §7)
+## 4. Para decisión humana
 
-Para que exista un veredicto real, el humano debe resolver, en este orden:
+### NO VERIFICADO
 
-1. **Pregunta 1 (bloqueante):** ¿ARCH redacta ADR-07..ADR-15 y actualiza `docs/adr/00-indice-adr.md`, o se acepta `TECH-DESIGN.md` §3 como fuente?
-2. **Pregunta 4:** inicializar git (¿en `floreria-ecommerce/` o en `PROYECTO_01/`?) y su remoto en GitHub. Sin repo no se puede verificar la propiedad de rutas ni abrir el PR.
-3. **Pregunta 3:** entregar la `DATABASE_URL` (Neon o Postgres local) para DEV y TESTER.
-4. **Entorno (hallazgo nuevo):** la máquina tiene Node `v20.19.5` y no tiene pnpm; ADR-08 y la DoD (punto 1) exigen Node 22 y pnpm. Se agregará a `SPRINT0.md` §8 cuando el humano lo confirme.
-5. **Preguntas 2, 5, 6, 7 y 8:** Vercel Preview en la DoD, ADR-11 fuera, esquema vacío, `CLAUDE.md` padre sin tocar, propiedad de la configuración de pruebas.
-6. **Aprobar `SPRINT0.md`.** Solo entonces el LEAD invoca a TESTER y DEV con el mismo documento.
+1. **Criterio 1, Node 22**: el entorno tiene Node v20.19.5. Para cerrarlo: instalar Node 22 y repetir `node -v`, `pnpm install` y `pnpm dev`.
+2. **Criterio 3, salud con BD**: falta la `DATABASE_URL` de Neon. Para cerrarlo: definirla (en el entorno o en `.env.local`) y repetir `pnpm test` y `pnpm test:e2e`. No hay que cambiar ninguna prueba.
+3. **Criterio 10, revisión humana**: la spec la pide de forma explícita.
 
-## 5. `NO VERIFICADO` para decisión humana
+### Interpretación de la spec (la spec admite más de una lectura, así que no la corrige ningún agente)
 
-Todos: DoD 1–10 y la propiedad de rutas (TESTER, DEV y commits sin prefijo). **Ninguno debe aceptarse como `NO VERIFICADO` permanente:** son pendientes porque el ciclo no empezó, no por imposibilidad de verificación. No corresponde abrir PR.
+4. **"Cuerpo exacto" (criterios 3 y 4)**: el TESTER compara el texto literal (`toBe('{"status":"ok","db":"ok"}')`), es decir, mismo orden de claves y sin espacios. La otra lectura es igualdad de JSON. **Hoy no cambia el resultado**: `Response.json` produce justo ese texto. ¿Cuál lectura vale?
+
+### Decisiones técnicas del DEV que la spec no fija (ninguna la contradice)
+
+5. Driver `postgres` (postgres.js) en lugar de `@neondatabase/serverless`. `TECH-DESIGN.md` no fija el driver. Next `^16.4.0`, Vitest 4 (la v5 exige Node 22.12), TypeScript 5.9 y ESLint 9. ¿Se aceptan o se pide al ARCH un ADR?
+
+### Hallazgos de rutas
+
+6. **H1** (`AGENTS.md` modificado por `next dev`) y **H2** (`informes/` fuera del mapa), descritos en la §1.
+
+### PR
+
+7. **No se puede abrir** con `gh pr create`: no hay `gh` ni remoto (§7.1). Cuando estén, el LEAD abre el PR desde `sprint0` con este veredicto. Nadie hizo push ni merge.
