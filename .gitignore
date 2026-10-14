@@ -16,3 +16,7 @@ test-results/
 # SO
 .DS_Store
 Thumbs.db
+
+# Next.js / TypeScript generados
+next-env.d.ts
+*.tsbuildinfo
