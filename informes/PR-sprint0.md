@@ -6,7 +6,7 @@
 ## Título
 
 ```
-Sprint 0: esqueleto Next.js + Drizzle + /api/health (walking skeleton)
+Sprint 0 esqueleto
 ```
 
 ## Descripción
