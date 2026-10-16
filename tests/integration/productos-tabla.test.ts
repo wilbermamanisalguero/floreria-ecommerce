@@ -1,4 +1,4 @@
-// HU-05 §D: la tabla `productos` como estado de partida (CONTRATO-HU-05 v1).
+// HU-05 §D: la tabla `productos` como estado de partida (CONTRATO-HU-05 v2).
 // Caja negra sobre la BD: solo nombres de tabla/columnas del contrato, nunca el esquema del DEV.
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {

@@ -1,4 +1,4 @@
-// HU-05 — Consultar catálogo (contratos/CONTRATO-HU-05.md v1), casos A, B, C y D5.
+// HU-05 — Consultar catálogo (contratos/CONTRATO-HU-05.md v2), casos A, B, C, D5, E1–E3.
 // Caja negra: estado de partida en la tabla `productos`, verificación por HTTP + navegador.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
@@ -202,7 +202,9 @@ test.describe("B. Ficha /catalogo/<id>", () => {
   }) => {
     const [p] = await sembrar([producto("Rosas")]);
     await page.goto(fichaPath(p.id));
-    await expect(page.locator("img")).toHaveCount(1);
+    // E3 (v2): "una sola imagen" se mide dentro de main; fuera (encabezado, logo) es libre.
+    await expect(page.locator("main")).toHaveCount(1);
+    await expect(page.locator("main img")).toHaveCount(1);
     await sinFueraDeAlcance(page);
   });
 
@@ -263,6 +265,44 @@ test.describe("C. Formato del precio", () => {
       expect(await textoCrudo(page.locator("body"))).toContain(texto);
     });
   }
+});
+
+test.describe("E2. Datos frescos: render por petición", () => {
+  test("/catalogo refleja altas, bajas y cambios de productos en la siguiente petición", async ({
+    page,
+  }) => {
+    const [rosas] = await sembrar([producto("Rosas")]);
+    await page.goto(CATALOGO_PATH);
+    const items = page.getByRole("list").getByRole("listitem");
+    await expect(items).toHaveCount(1);
+
+    await insertarProductos(sql, [producto("Lirios")]);
+    await page.goto(CATALOGO_PATH);
+    await expect(items).toHaveCount(2);
+
+    await sql`update productos set nombre = 'Orquídeas' where id = ${rosas.id}`;
+    await page.goto(CATALOGO_PATH);
+    await expect(items.filter({ hasText: "Orquídeas" })).toHaveCount(1);
+    await expect(items.filter({ hasText: "Rosas" })).toHaveCount(0);
+
+    await vaciarProductos(sql);
+    await page.goto(CATALOGO_PATH);
+    await expect(page.getByText(MSG_CATALOGO_VACIO, { exact: true })).toHaveCount(1);
+  });
+
+  test("/catalogo/<id> refleja cambios y desactivación en la siguiente petición", async ({ page }) => {
+    const [p] = await sembrar([producto("Rosas")]);
+    await page.goto(fichaPath(p.id));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Rosas");
+
+    await sql`update productos set nombre = 'Orquídeas', precio_minor = 5000 where id = ${p.id}`;
+    await page.goto(fichaPath(p.id));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Orquídeas");
+    expect(await textoCrudo(page.locator("body"))).toContain("S/ 50.00");
+
+    await sql`update productos set activo = false where id = ${p.id}`;
+    expect((await page.goto(fichaPath(p.id)))?.status()).toBe(404);
+  });
 });
 
 test.describe("D5. Imágenes en Vercel Blob", () => {

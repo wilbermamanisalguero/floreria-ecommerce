@@ -20,7 +20,8 @@ function appRoutes(): string[] {
     .filter((f) => !f.split("/").some((seg) => seg.startsWith("_")))
     .map((f) => {
       const segs = f.split("/").slice(0, -1).filter((s) => !/^\(.*\)$/.test(s) && !s.startsWith("@"));
-      return `/${segs.join("/")}`;
+      // Segmento dinámico "[x]" -> "<param>": el contrato fija la ruta, no el nombre del parámetro.
+      return `/${segs.map((s) => (/^\[.+\]$/.test(s) ? "<param>" : s)).join("/")}`;
     })
     .sort();
 }
@@ -70,14 +71,32 @@ describe("criterio 7 (parte estática): configuración de migraciones", () => {
   });
 });
 
-describe("criterio 10: cero lógica de negocio", () => {
-  it("solo existen las rutas / y /api/health", () => {
-    expect(appRoutes()).toEqual(["/", "/api/health"]);
+// Criterio 10 acotado por CONTRATO-HU-05 v2 §E4: solo las rutas y tablas que fija un contrato
+// aprobado (SPRINT0.md: / y /api/health; HU-05: /catalogo, /catalogo/<id> y productos).
+const RUTAS_CONTRATADAS = ["/", "/api/health", "/catalogo", "/catalogo/<param>"];
+const TABLAS_CONTRATADAS = ["productos"];
+
+describe("criterio 10: cero lógica de negocio fuera de contrato (CONTRATO-HU-05 v2 §E4)", () => {
+  it("solo existen las rutas que fija un contrato aprobado", () => {
+    expect(appRoutes()).toEqual([...RUTAS_CONTRATADAS].sort());
   });
 
-  it("el esquema Drizzle no define tablas", () => {
-    const conTablas = codeFiles.filter((f) => /\bpgTable\s*\(/.test(readText("src", f)));
-    expect(conTablas).toEqual([]);
+  it("el esquema Drizzle solo define las tablas que fija un contrato aprobado", () => {
+    const tablas = codeFiles.flatMap((f) =>
+      [...readText("src", f).matchAll(/\bpgTable\s*\(\s*["'`]([^"'`]+)["'`]/g)].map((m) => m[1]),
+    );
+    expect([...new Set(tablas)].sort()).toEqual(TABLAS_CONTRATADAS);
+  });
+
+  it("las migraciones de drizzle/ solo crean las tablas que fija un contrato aprobado", () => {
+    const tablas = listFiles("drizzle")
+      .filter((f) => f.endsWith(".sql"))
+      .flatMap((f) =>
+        [...readText("drizzle", f).matchAll(/create table(?: if not exists)?\s+(?:"?\w+"?\.)?"?(\w+)"?/gi)].map(
+          (m) => m[1],
+        ),
+      );
+    expect([...new Set(tablas)].sort()).toEqual(TABLAS_CONTRATADAS);
   });
 
   it("no hay Server Actions ('use server')", () => {

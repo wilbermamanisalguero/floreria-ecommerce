@@ -1,4 +1,4 @@
-// Contrato observable de HU-05 (contratos/CONTRATO-HU-05.md v1): nombres que no se negocian
+// Contrato observable de HU-05 (contratos/CONTRATO-HU-05.md v2): nombres que no se negocian
 // y preparación del estado de partida insertando directamente en la tabla `productos` (§D).
 import { spawnSync } from "node:child_process";
 import path from "node:path";
@@ -12,7 +12,8 @@ export const MSG_CATALOGO_VACIO = "Por ahora no hay productos en el catálogo.";
 export const MSG_NO_ENCONTRADO = "Producto no encontrado";
 export const ENLACE_VOLVER = "Volver al catálogo";
 
-// §C: precio_minor -> texto exacto (soles, "S/", un espacio U+0020, miles con coma, dos decimales).
+// §C + §E1 (v2): precio_minor -> texto exacto (soles, "S/", espacio U+0020 —U+00A0 no cumple—,
+// miles con coma, dos decimales). Se compara textContent sin normalizar espacios.
 export const PRECIOS = [
   { caso: "C1", minor: 12050, texto: "S/ 120.50" },
   { caso: "C2", minor: 123456, texto: "S/ 1,234.56" },
