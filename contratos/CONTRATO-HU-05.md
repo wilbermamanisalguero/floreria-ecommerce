@@ -1,6 +1,6 @@
 # CONTRATO — HU-05 Consultar catálogo de productos
 
-**Versión:** v1
+**Versión:** v2
 **Estado:** Aprobado (2026-10-15, humano)
 **HU:** `docs/historias-usuario/HU-05-floreria-consultar-catalogo.md`
 
@@ -94,6 +94,16 @@ GET /catalogo/<id>   (<id> = id del producto, UUID)
 | D4 | `precio_minor` obligatorio, entero > 0 | Insertar nulo, 0 o negativo falla | TDD §5 — **DECISIÓN PROPUESTA 7** |
 | D5 | Imágenes | `imagen_url` es una URL `https://` en el host `*.public.blob.vercel-storage.com`; la página se renderiza con esas URL sin error | ADR-14 — host: **DECISIÓN PROPUESTA 8** |
 
+### E. Reglas aclaradas en v2 (humano, 2026-10-15)
+
+| # | Regla | Salida esperada | Origen |
+|---|---|---|---|
+| E1 | Espacio del precio | El espacio entre `S/` y el número es **U+0020** (espacio normal). U+00A0 no cumple. | Humano v2 (pregunta del TESTER) |
+| E2 | Datos frescos | `/catalogo` y `/catalogo/<id>` se renderizan **por petición**: un cambio en `productos` se ve en la siguiente petición, sin prerender en `build` ni caché. | Humano v2 (pregunta del TESTER) |
+| E3 | Imágenes en la ficha | "Una sola imagen" (B2) aplica **dentro de `main`**. Fuera de `main` (encabezado, logo) es libre. Lo mismo para A2 en el listado: una imagen por elemento de la lista. | Humano v2 (pregunta del TESTER) |
+| E4 | Pruebas del Sprint 0 (criterio 10) | Ya no exigen "solo `/` y `/api/health`" ni "esquema sin tablas": exigen que solo existan las rutas y tablas que fija un contrato aprobado (hoy: `/`, `/api/health`, `/catalogo`, `/catalogo/<id>`, tabla `productos`). Las acota el TESTER. | Humano v2 |
+| E5 | BD de pruebas | Postgres desechable (Neon, según Sprint 0 P3) que entrega el humano. Las pruebas que vacían `productos` solo corren con `DATABASE_URL` y `TEST_ALLOW_DB_RESET=1`. Sin ella, quedan `NO VERIFICADO`. | Sprint 0 P3 + guarda del TESTER |
+
 ## Nombres que no se negocian
 
 | Tipo | Valor exacto |
@@ -146,3 +156,4 @@ Resueltas el 2026-10-15:
 | Versión | Fecha | Cambio | Motivo | Aprobado por |
 |---|---|---|---|---|
 | v1 | 2026-10-15 | Versión inicial, con PA 3a/3b/4 y PA 10 (PEN, `S/ 120.50`) resueltos; decisiones 1–8 aprobadas | Tomar HU-05 | Humano, 2026-10-15 |
+| v2 | 2026-10-15 | Sección E: espacio U+0020, render por petición, una imagen dentro de `main`, criterio 10 del Sprint 0 acotado, BD de pruebas desechable | Huecos reportados por el TESTER en su entrega | Humano, 2026-10-15 |
