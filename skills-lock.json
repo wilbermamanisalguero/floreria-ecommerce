@@ -7,17 +7,23 @@
       "skillPath": "skills/crear-guardrail/SKILL.md",
       "computedHash": "51f276be3fb311da01407fd391bbe74d1cf5ddee44964816f0b83cc3db778574"
     },
+    "escribir-contrato": {
+      "source": "adminoryslabs/Armory",
+      "sourceType": "github",
+      "skillPath": "skills/escribir-contrato/SKILL.md",
+      "computedHash": "b2e6103b35768ed11ebf118b8ebfd708754ed538e8eac700fe7fd5bbc9cfdff1"
+    },
     "init-agent": {
       "source": "adminoryslabs/Armory",
       "sourceType": "github",
       "skillPath": "skills/init-agent/SKILL.md",
-      "computedHash": "e4dad0139c4f9c45c1e21fa7e24e2396d56f9d1ea1fe312dfb78f25b3fa1833a"
+      "computedHash": "987e7c49a3040f950cbc886aaf1e629d902618deb3b493855c1fd9c37fbe6538"
     },
     "invoke-agent": {
       "source": "adminoryslabs/Armory",
       "sourceType": "github",
       "skillPath": "skills/invoke-agent/SKILL.md",
-      "computedHash": "12387ce5a601544b66d4dc59f7fdcf9280e343689c784d90cc3db68681c011d6"
+      "computedHash": "a9b291b1bc108533b8c72d3af68b899e11e0cd644ccb5a21b1b51e0c6eee95d5"
     },
     "preparar-sprint0": {
       "source": "adminoryslabs/Armory",
@@ -29,7 +35,7 @@
       "source": "adminoryslabs/Armory",
       "sourceType": "github",
       "skillPath": "skills/veredicto/SKILL.md",
-      "computedHash": "7b4cb0f1ed0d88dbd7d381ae7ec1fd22ec72c4d2055eb902969bb5fcbb5a6880"
+      "computedHash": "f316ba73141a32f1e7210e82086cbcf2d538634fa517c2e15bba232d1c7933bd"
     }
   }
 }
