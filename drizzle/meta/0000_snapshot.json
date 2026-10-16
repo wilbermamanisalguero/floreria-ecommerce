@@ -1,0 +1,87 @@
+{
+  "id": "5290d80f-9dcc-4163-b347-de6848d0bc57",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.productos": {
+      "name": "productos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "precio_minor": {
+          "name": "precio_minor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imagen_url": {
+          "name": "imagen_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "productos_nombre_no_vacio": {
+          "name": "productos_nombre_no_vacio",
+          "value": "\"productos\".\"nombre\" <> ''"
+        },
+        "productos_descripcion_no_vacia": {
+          "name": "productos_descripcion_no_vacia",
+          "value": "\"productos\".\"descripcion\" <> ''"
+        },
+        "productos_imagen_url_no_vacia": {
+          "name": "productos_imagen_url_no_vacia",
+          "value": "\"productos\".\"imagen_url\" <> ''"
+        },
+        "productos_precio_minor_positivo": {
+          "name": "productos_precio_minor_positivo",
+          "value": "\"productos\".\"precio_minor\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
